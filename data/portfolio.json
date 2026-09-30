@@ -388,6 +388,12 @@
       "date": "2026-08-17",
       "type": "dividend",
       "dps": 1.01
+    },
+    {
+      "id": "in-muoazxgb-bnix",
+      "date": "2026-10-01",
+      "type": "deposit",
+      "amount": 10
     }
   ]
 }
