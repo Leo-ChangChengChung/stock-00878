@@ -1,0 +1,238 @@
+:root {
+  --bg: #efe6d6;
+  --paper: #fffaf2;
+  --ink: #241c15;
+  --muted: #6f655b;
+  --line: #e3d6c2;
+  --up: #9d2c2c;
+  --down: #1d6a45;
+  --button: #24362c;
+  --button-text: #f6f1e6;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.7), transparent 28rem),
+    var(--bg);
+  font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif;
+  line-height: 1.5;
+}
+
+button, input {
+  font: inherit;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  align-items: end;
+  padding: 2rem 1.5rem 1rem;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.kicker {
+  margin: 0;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+h1, h2 { font-weight: 650; }
+
+h1 {
+  margin: 0;
+  font-size: 2.4rem;
+  letter-spacing: 0.04em;
+}
+
+h2 { margin: 0; font-size: 1.25rem; }
+
+.price-form {
+  display: grid;
+  grid-template-columns: auto 8rem auto;
+  gap: 0.5rem 0.6rem;
+  align-items: center;
+}
+
+.price-form label { color: var(--muted); }
+
+.source {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+input, button {
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 0.45rem 0.7rem;
+}
+
+button { cursor: pointer; }
+
+button.primary, .panel-head button, .price-form button {
+  background: var(--button);
+  color: var(--button-text);
+  border-color: var(--button);
+}
+
+.banner, .status, .summary, .panel {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.banner, .status {
+  margin-top: 0.5rem;
+}
+
+.banner {
+  background: #f3e2c2;
+  border: 1px solid #e2c89a;
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+}
+
+.status { min-height: 1.4rem; color: var(--muted); }
+.status.error { color: var(--up); }
+
+.summary {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(3, 1fr);
+  gap: 0.8rem;
+  padding-top: 0.6rem;
+  padding-bottom: 0.4rem;
+}
+
+.card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0.9rem 1rem 0.8rem;
+}
+
+.card.hero { grid-row: span 2; }
+
+.card p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+
+.card strong {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 1.35rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.card.hero strong {
+  font-size: 2.6rem;
+  letter-spacing: -0.03em;
+}
+
+.card.hero span {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.up { color: var(--up); }
+.down { color: var(--down); }
+
+.panel { padding-top: 1.2rem; padding-bottom: 0.4rem; }
+
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.7rem;
+}
+
+.actions { display: flex; gap: 0.5rem; }
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+th, td {
+  padding: 0.55rem 0.7rem;
+  text-align: right;
+  border-bottom: 1px solid var(--line);
+}
+
+th:first-child, td:first-child, th:last-child, td:last-child { text-align: left; }
+
+th {
+  color: var(--muted);
+  font-weight: 600;
+  background: #f7f1e6;
+}
+
+tr:last-child td { border-bottom: 0; }
+
+td .row-actions { display: flex; gap: 0.35rem; }
+
+td .row-actions button {
+  padding: 0.2rem 0.5rem;
+  background: transparent;
+}
+
+.note {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+dialog {
+  border: 0;
+  border-radius: 16px;
+  padding: 1.2rem 1.2rem 1rem;
+  width: min(32rem, calc(100vw - 2rem));
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 18px 60px rgba(40, 28, 16, 0.2);
+}
+
+dialog::backdrop { background: rgba(36, 28, 21, 0.35); }
+
+.fields { display: grid; gap: 0.7rem; }
+
+.fields label, #password-form label { display: grid; gap: 0.25rem; }
+
+.hint, .error { margin: 0.4rem 0; }
+
+.error { color: var(--up); min-height: 1.2rem; }
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+}
+
+@media (max-width: 800px) {
+  .top, .summary { display: block; }
+  .price-form { margin-top: 1rem; }
+  .card { margin-bottom: 0.7rem; }
+  .card.hero strong { font-size: 2.2rem; }
+  .panel-head { align-items: flex-start; flex-direction: column; }
+}

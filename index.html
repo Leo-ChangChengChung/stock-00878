@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>00878 投資紀錄</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="top">
+      <div>
+        <p class="kicker">00878</p>
+        <h1>投資紀錄</h1>
+      </div>
+      <form id="price-form" class="price-form">
+        <label for="price">目前股價</label>
+        <input id="price" name="price" type="number" inputmode="decimal" min="0" step="0.01" />
+        <button type="submit">用這個價格</button>
+        <p id="price-source" class="source"></p>
+      </form>
+    </header>
+
+    <p id="banner" class="banner" hidden></p>
+    <p id="status" class="status" role="status"></p>
+    <section id="summary" class="summary" aria-live="polite"></section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>交易紀錄</h2>
+        <button type="button" id="add-trade">新增買進</button>
+      </div>
+      <div class="table-wrap">
+        <table id="trades">
+          <thead>
+            <tr>
+              <th>日期</th>
+              <th>買入股價</th>
+              <th>股數</th>
+              <th>報酬率</th>
+              <th>賣出股價</th>
+              <th>資本利得</th>
+              <th>校正後的股數</th>
+              <th>買進金額</th>
+              <th>賣出金額</th>
+              <th>年份</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>帳戶資金出入</h2>
+        <div class="actions">
+          <button type="button" id="add-deposit">新增存入</button>
+          <button type="button" id="add-dividend">新增配息</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table id="cash">
+          <thead>
+            <tr>
+              <th>日期</th>
+              <th>存入</th>
+              <th>每股股利</th>
+              <th>持股數</th>
+              <th>股利</th>
+              <th>投入成本</th>
+              <th>股息報酬率</th>
+              <th>年份</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <dialog id="editor">
+      <form id="editor-form" method="dialog">
+        <h2 id="editor-title"></h2>
+        <div id="editor-fields" class="fields"></div>
+        <p id="editor-error" class="error"></p>
+        <div class="dialog-actions">
+          <button type="button" id="editor-cancel" value="cancel">取消</button>
+          <button type="submit" class="primary" value="default">儲存</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="password-dialog">
+      <form id="password-form" method="dialog">
+        <h2>輸入密碼</h2>
+        <p class="hint">看資料不用密碼。新增、修改、刪除才要。</p>
+        <label for="password">密碼</label>
+        <input id="password" type="password" autocomplete="current-password" />
+        <p id="password-error" class="error"></p>
+        <div class="dialog-actions">
+          <button type="button" id="password-cancel">取消</button>
+          <button type="submit" class="primary">確定</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "name": "stock-00878",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}
