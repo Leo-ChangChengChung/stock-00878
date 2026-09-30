@@ -128,30 +128,69 @@ function encodeBase64Utf8(value) {
   return btoa(binary);
 }
 
-function githubHeaders(env) {
-  return {
-    Authorization: `Bearer ${env.GITHUB_TOKEN}`,
+function githubToken(env) {
+  return String(env.GITHUB_TOKEN || "").trim();
+}
+
+function githubHeaders(env, { auth = true } = {}) {
+  const headers = {
     Accept: "application/vnd.github+json",
     "User-Agent": "stock-00878",
     "X-GitHub-Api-Version": "2022-11-28",
   };
+  if (auth && githubToken(env)) headers.Authorization = `Bearer ${githubToken(env)}`;
+  return headers;
 }
 
 function repoParts(env) {
   const repo = String(env.GITHUB_REPO || "");
   const [owner, name] = repo.split("/");
-  if (!owner || !name || !env.GITHUB_TOKEN) return null;
+  if (!owner || !name || !githubToken(env)) return null;
   return { owner, name, branch: env.GITHUB_BRANCH || "main" };
+}
+
+async function githubFailure(response) {
+  const text = await response.text();
+  let message = text.slice(0, 240);
+  try {
+    const body = JSON.parse(text);
+    if (body.message) message = String(body.message).slice(0, 180);
+  } catch {
+    message = text.slice(0, 240);
+  }
+  return { ok: false, status: response.status, message };
+}
+
+async function readContents(env, repo, auth) {
+  const url = `https://api.github.com/repos/${repo.owner}/${repo.name}/contents/${FILE_PATH}?ref=${encodeURIComponent(repo.branch)}`;
+  const response = await fetch(url, { headers: githubHeaders(env, { auth }) });
+  if (!response.ok) return githubFailure(response);
+  const file = await response.json();
+  return { ok: true, sha: file.sha, portfolio: JSON.parse(decodeBase64Utf8(file.content)) };
 }
 
 async function githubGet(env) {
   const repo = repoParts(env);
   if (!repo) return { error: "Worker 還沒設定 GITHUB_REPO 或 GITHUB_TOKEN", status: 500 };
-  const url = `https://api.github.com/repos/${repo.owner}/${repo.name}/contents/${FILE_PATH}?ref=${encodeURIComponent(repo.branch)}`;
-  const response = await fetch(url, { headers: githubHeaders(env) });
-  if (!response.ok) return { error: "讀取 Git 上的紀錄失敗", status: 502 };
-  const file = await response.json();
-  return { sha: file.sha, portfolio: JSON.parse(decodeBase64Utf8(file.content)) };
+  const authed = await readContents(env, repo, true);
+  if (authed.ok) return { sha: authed.sha, portfolio: authed.portfolio };
+  const publicRead = await readContents(env, repo, false);
+  if (publicRead.ok) return { sha: publicRead.sha, portfolio: publicRead.portfolio };
+  const raw = await fetch(
+    `https://raw.githubusercontent.com/${repo.owner}/${repo.name}/${repo.branch}/${FILE_PATH}`,
+    { headers: { "User-Agent": "stock-00878" } },
+  );
+  if (raw.ok) {
+    return {
+      sha: "",
+      portfolio: JSON.parse(await raw.text()),
+      git: { authed: authed.status, authedMessage: authed.message, publicStatus: publicRead.status, publicMessage: publicRead.message },
+    };
+  }
+  return {
+    error: `讀取 Git 上的紀錄失敗（鑰匙 ${authed.status}，公開 ${publicRead.status}）`,
+    status: 502,
+  };
 }
 
 async function githubPut(env, portfolio, sha, message) {
@@ -168,7 +207,11 @@ async function githubPut(env, portfolio, sha, message) {
     }),
   });
   if (response.status === 409) return { conflict: true };
-  if (!response.ok) return { error: "寫入 Git 失敗", status: 502 };
+  if (!response.ok) {
+    const failure = await githubFailure(response);
+    const detail = failure.message ? `：${failure.message}` : "";
+    return { error: `寫入 Git 失敗（GitHub ${failure.status}${detail}）`, status: 502 };
+  }
   const body = await response.json();
   return { sha: body.content.sha };
 }
