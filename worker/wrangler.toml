@@ -5,4 +5,4 @@ compatibility_date = "2026-01-01"
 [vars]
 GITHUB_BRANCH = "main"
 # 部署前記得改成你的 GitHub 倉庫，例如 "帳號/stock-00878"
-GITHUB_REPO = ""
+GITHUB_REPO = "Leo-ChangChengChung/stock-00878"
